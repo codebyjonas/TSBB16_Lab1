@@ -1,10 +1,10 @@
 % script natural
 
-%% Sätt upp en del parameterar
+%% Sï¿½tt upp en del parameterar
 
 fs = 44100;                 % Sampelfrekvens
 
-%% Läs in ljuden och spela upp
+%% Lï¿½s in ljuden och spela upp
 
 load Ljud
 figure(3);
@@ -14,7 +14,7 @@ for p=1:10,
   pause(1);
 end,
 
-%% Ändra kvantisering
+%% ï¿½ndra kvantisering
 
 b=15;
 r=1.0;  %Signalinterval -r...+r
@@ -35,10 +35,10 @@ end,
 figure(5);subplot(2,1,1);plot(sigma);title('sigma')
 subplot(2,1,2);plot(log(sigma));title('logaritm av sigma');
 
-%% nedsampling och interpolation: närmsta granne interpolation
+%% nedsampling och interpolation: nï¿½rmsta granne interpolation
 
-m=4;n=2^m;
-rekfilt=[0 0 ones(1,n) 0 0]; % en rektangelfunktion vid närmsta-granne
+m=3;n=2^m;
+rekfilt=[0 0 ones(1,n) 0 0]; % en rektangelfunktion vid nï¿½rmsta-granne
 figure(6);plot(rekfilt,'o-','Linewidth',2);
 title('interpolationsfunktion');
 signal=ljud{10};
@@ -50,10 +50,10 @@ figure(7);plot(rekon,'o-');title(sprintf('ljud %d',p));
 hold('on');plot(k,signal(k),'or');hold('off');
 sound(rekon,fs);
 
-%% nedsampling och interpolation: linjär interpolation
+%% nedsampling och interpolation: linjï¿½r interpolation
 
-m=4;n=2^m;
-rekfilt=[0 0 (n-abs(-n:(n-1)))/n 0 0]; % en rektangelfunktion vid närmsta-granne
+m=3;n=2^m;
+rekfilt=[0 0 (n-abs(-n:(n-1)))/n 0 0]; % en rektangelfunktion vid nï¿½rmsta-granne
 figure(6);plot(rekfilt,'o-','Linewidth',2);
 title('interpolationsfunktion');
 signal=ljud{10};
@@ -62,7 +62,7 @@ k=1:n:length(signal);
 nedsampl(k)=signal(k);    % Sampla ned med faktor n
 rekon=conv(nedsampl,rekfilt,'same');
 figure(7);plot(rekon,'o-');title(sprintf('ljud %d',p));
-hold('on');plot(k,signal(k),'or');hold('off');
+hold('on');plot(k,signal(k),'or-');hold('off');
 sound(rekon,fs);
 
 %% Hur beror felet av m?
@@ -82,12 +82,21 @@ subplot(2,1,2);plot(log(sigma),'o-');title('log sigma');
 
 %% Lineariet
 
-gamma=1.0;
+f = 1000;
+omega = 2*pi*f;
+fs = 44100;
+Ts = 1/fs;
+k = 0:1:(2*fs);
+s1 = cos(omega*k*Ts);
+figure(1);
+plot(s1(1:200),'o-');
+
+gamma=2.5;
 x=-1:0.01:1;
 distf=sign(x).*(abs(x).^gamma);
 figure(9);plot(x,distf);
 s=ljud{10};
-%s=s1;
+s=s1;
 dist_s=sign(s).*(abs(s).^gamma);
 figure(10);plot(dist_s);
 sound(s,fs);pause(3);sound(dist_s,fs);
